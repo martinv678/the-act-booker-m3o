@@ -36,12 +36,12 @@ export const getServerSideProps = withAuth(async (context) => {
 const User: NextPage<UserProps> = ({ performers }) => {
   return (
     <UserLayout>
-      <Link href="/user/performers/add">
+      <Link href="/supplier/performers/add">
         <a>Add new performer</a>
       </Link>
       {performers.map((item) => (
         <div key={item.id}>
-          <Link href={`/user/performers/${item.id}/details`}>
+          <Link href={`/supplier/performers/${item.id}/details`}>
             <a>{item.name}</a>
           </Link>
         </div>

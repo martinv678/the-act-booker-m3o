@@ -3,10 +3,9 @@ import type { Performer } from '@/lib/types'
 import Head from 'next/head'
 import { useForm, Controller } from 'react-hook-form'
 import { withAuth } from '@m3o/nextjs'
-import { useRouter } from 'next/router'
 import { UserLayout } from '@/components/UserLayout'
 import { TextInput } from '@/components/TextInput'
-import { post } from '@/lib/fetch'
+import { useAddPerformer } from '@/hooks/useAddPerformer'
 
 type Fields = Pick<Performer, 'name' | 'tagLine'>
 
@@ -28,17 +27,8 @@ export const getServerSideProps = withAuth(async (context) => {
 })
 
 const AddPerformer: NextPage = () => {
-  const router = useRouter()
   const { control, handleSubmit } = useForm<Fields>()
-
-  async function onSubmit(values: Fields) {
-    try {
-      await post('/api/performers/create', values)
-      router.push('/user')
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  const { addPerformer } = useAddPerformer()
 
   return (
     <UserLayout>
@@ -48,7 +38,7 @@ const AddPerformer: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>Create Performer</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(addPerformer)}>
         <Controller
           control={control}
           defaultValue=""
