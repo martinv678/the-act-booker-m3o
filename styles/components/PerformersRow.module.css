@@ -1,0 +1,45 @@
+.root {
+  padding: var(--spacing);
+}
+
+.title {
+  margin: 0;
+  color: var(--black);
+  font-size: 26px;
+}
+
+.scroll {
+  overflow-x: scroll;
+  display: flex;
+  flex-direction: row;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+  opacity: 0;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: var(--half-spacing);
+}
+
+.performer {
+  margin-right: var(--spacing);
+}
+
+.seeAll {
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--primary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.seeAll:hover {
+  text-decoration: underline;
+}
