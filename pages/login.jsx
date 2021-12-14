@@ -1,7 +1,7 @@
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
-import { useEmailLogin } from "@m3o/nextjs/user/client";
-import { EMAIL_REGEX } from "../lib/validation";
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
+import { useEmailLogin } from '@m3o/auth'
+import { EMAIL_REGEX } from '../lib/validation'
 
 /**
  * This example login page uses `react-hook-form` for validation
@@ -10,16 +10,16 @@ import { EMAIL_REGEX } from "../lib/validation";
  * hook.
  */
 const Login = () => {
-  const router = useRouter();
-  const { handleSubmit, register, formState } = useForm();
+  const router = useRouter()
+  const { handleSubmit, register, formState } = useForm()
 
   const { login, error } = useEmailLogin({
     onSuccess: () => {
       /* Add your code here. When successfully logged in the user
       will be available in the <UserProvider /> via the useUser() hook */
-      router.push("/");
+      router.push('/')
     },
-  });
+  })
 
   return (
     <div className="full-page-container">
@@ -31,14 +31,14 @@ const Login = () => {
             <label htmlFor="email">Email</label>
             <input
               id="email"
-              {...register("email", {
+              {...register('email', {
                 pattern: {
                   value: EMAIL_REGEX,
-                  message: "Please provide a valid email address",
+                  message: 'Please provide a valid email address',
                 },
                 required: {
                   value: true,
-                  message: "Please provide an email address",
+                  message: 'Please provide an email address',
                 },
               })}
             />
@@ -51,10 +51,10 @@ const Login = () => {
             <input
               id="password"
               type="password"
-              {...register("password", {
+              {...register('password', {
                 required: {
                   value: true,
-                  message: "Please provide your password",
+                  message: 'Please provide your password',
                 },
               })}
             />
@@ -68,7 +68,7 @@ const Login = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

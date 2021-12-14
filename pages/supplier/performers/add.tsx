@@ -2,28 +2,15 @@ import type { NextPage } from 'next'
 import type { Performer } from '@/lib/types'
 import Head from 'next/head'
 import { useForm, Controller } from 'react-hook-form'
-import { withAuth } from '@m3o/nextjs'
+import { withAuth } from '@m3o/auth'
 import { UserLayout } from '@/components/UserLayout'
 import { TextInput } from '@/components/TextInput'
 import { useAddPerformer } from '@/hooks/useAddPerformer'
 
 type Fields = Pick<Performer, 'name' | 'tagLine'>
 
-export const getServerSideProps = withAuth(async (context) => {
-  if (!context.req.user) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/',
-      },
-    }
-  }
-
-  return {
-    props: {
-      user: context.req.user,
-    },
-  }
+export const getServerSideProps = withAuth({
+  redirectOnAuthFailure: true,
 })
 
 const AddPerformer: NextPage = () => {

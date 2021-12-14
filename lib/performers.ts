@@ -1,6 +1,8 @@
-import type { Performer } from "./types";
-import { DbClient } from "./utils";
+import type { Performer } from './types'
+import { Storage } from '@m3o/storage'
 
-const TABLE_NAME = "performers";
+const TABLE_NAME = 'performers'
 
-export const performers = new DbClient<Performer>({ tableName: TABLE_NAME });
+export const performers = new Storage<Performer>({
+  tableName: TABLE_NAME,
+})

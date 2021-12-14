@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getLoggedInUserAccount } from '@m3o/nextjs'
+import { getLoggedInUserAccount } from '@m3o/auth'
 import { performers } from '@/lib/performers'
 
 export default async function updatePerformer(

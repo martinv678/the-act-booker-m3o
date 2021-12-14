@@ -1,36 +1,27 @@
 import type { NextPage } from 'next'
-import type { Account } from 'm3o/user'
 import type { Performer } from '@/lib/types'
 import Link from 'next/link'
-import { withAuth } from '@m3o/nextjs'
+import { withAuth } from '@m3o/auth'
 import { performers } from '@/lib/performers'
 import { UserLayout } from '@/components/UserLayout'
 
 interface UserProps {
   performers: Performer[]
-  user: Account
 }
 
-export const getServerSideProps = withAuth(async (context) => {
-  if (!context.req.user) {
+export const getServerSideProps = withAuth<UserProps>({
+  redirectOnAuthFailure: true,
+  async onAuthentication({ user }) {
+    const listResponse = await performers.list({
+      where: { creator: user.id },
+    })
+
     return {
-      redirect: {
-        permanent: false,
-        destination: '/',
+      props: {
+        performers: listResponse,
       },
     }
-  }
-
-  const listResponse = await performers.list({
-    where: { creator: context.req.user.id },
-  })
-
-  return {
-    props: {
-      performers: listResponse,
-      user: context.req.user,
-    },
-  }
+  },
 })
 
 const User: NextPage<UserProps> = ({ performers }) => {

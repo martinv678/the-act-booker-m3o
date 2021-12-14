@@ -1,5 +1,6 @@
 import type { FC } from 'react'
 import classnames from 'classnames'
+import { Logo } from './Logo'
 // import Logo from './Logo';
 // import {
 //   getIsLoggedIn,
@@ -38,8 +39,8 @@ export const SiteHeader: FC = (
   })
 
   return (
-    <header className="border-b border-gray-200 flex justify-between">
-      {/* <Logo /> */}
+    <header className="border-b border-gray-200 flex justify-between p-6">
+      <Logo />
       <div className={styles.right}>
         Hello
         {/* <Search />

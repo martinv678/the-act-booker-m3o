@@ -1,4 +1,4 @@
-import { getLoggedInUserAccount } from '@m3o/nextjs'
+import { getLoggedInUserAccount } from '@m3o/auth'
 import { performers } from '@/lib/performers'
 
 export default async function createPerformer(req, res) {

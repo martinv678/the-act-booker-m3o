@@ -1,3 +1,3 @@
-import { handleAuth } from "@m3o/nextjs";
+import { handleAuth } from '@m3o/auth'
 
-export default handleAuth();
+export default handleAuth()

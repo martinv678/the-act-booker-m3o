@@ -1,39 +1,29 @@
 import type { NextPage } from 'next'
 import type { Performer } from '@/lib/types'
-import type { Account } from 'm3o/user'
 import { useForm, Controller } from 'react-hook-form'
-import { withAuth } from '@m3o/nextjs'
+import { withAuth } from '@m3o/auth'
 import { performers } from '@/lib/performers'
 import { TextInput } from '@/components/TextInput'
 import { EditUserLayout } from '@/components/EditUserLayout'
-import { put } from '@/lib/fetch'
 import { useSavePerformerDetails } from '@/hooks/useSavePerformerDetails'
 
 interface UserProps {
   performer: Performer
-  user: Account
 }
 
-export const getServerSideProps = withAuth(async (context) => {
-  if (!context.req.user) {
+export const getServerSideProps = withAuth({
+  redirectOnAuthFailure: true,
+  async onAuthentication({ context }) {
+    const result = await performers.findUnique({
+      where: { id: context.query.id as string },
+    })
+
     return {
-      redirect: {
-        permanent: false,
-        destination: '/',
+      props: {
+        performer: result,
       },
     }
-  }
-
-  const result = await performers.findUnique({
-    where: { id: context.query.id as string },
-  })
-
-  return {
-    props: {
-      performer: result,
-      user: context.req.user,
-    },
-  }
+  },
 })
 
 const EditPerformerDetails: NextPage<UserProps> = ({ performer }) => {

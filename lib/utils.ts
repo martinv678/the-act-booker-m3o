@@ -1,18 +1,56 @@
-import { DbService } from 'm3o/db'
+import { DbService, ReadRequest } from 'm3o/db'
+
+interface QueryOperators {
+  gt?: number
+  gte?: number
+  lt?: number
+  lte?: number
+  not?: string | number
+}
 
 interface Query<T> {
   where?: {
-    [K in keyof T]+?: T[K]
+    [K in keyof T]+?: T[K] | QueryOperators
   }
   select?: Array<keyof T>
-  data?: T
+}
+
+interface ListQuery<T> extends Query<T> {
+  limit?: number
+  offset?: number
+  order?: 'asc' | 'desc'
+  orderBy?: keyof T
+}
+
+interface RecordQuery<T> extends Query<T> {
+  data: T
+}
+
+function detectTypeAndReturnFormatted(value: string | number) {
+  return typeof value === 'string' ? `"${value}"` : value
 }
 
 function returnQueryString<T>(query: Query<T>) {
-  return Object.keys(query.where || {}).reduce((str, key, i) => {
+  return Object.keys(query.where || {}).reduce((str, key) => {
     const value = query.where[key]
-    const formatted = typeof value === 'string' ? `"${value}"` : value
-    const item = `${key} == ${formatted}`
+    let item = ''
+
+    switch (typeof value) {
+      case 'object':
+        const casted = value as QueryOperators
+
+        if (casted.not) {
+          item = `${key} != ${detectTypeAndReturnFormatted(casted.not)}`
+        }
+
+        break
+      case 'string':
+        item = `${key} == "${value}"`
+        break
+      default:
+        item = value
+        break
+    }
 
     return str + item
   }, '')
@@ -31,7 +69,7 @@ export class DbClient<T> {
     this.tableName = tableName
   }
 
-  create(query: Query<Omit<T, 'id'>>) {
+  create(query: RecordQuery<Omit<T, 'id'>>) {
     if (!query.data) {
       throw new Error('Please provide data when creating')
     }
@@ -42,12 +80,16 @@ export class DbClient<T> {
     })
   }
 
-  async list(query: Query<T> = { where: {} }) {
+  async list(query: ListQuery<T> = { where: {} }) {
     const queryString = returnQueryString<T>(query)
+
+    console.log({ queryString })
 
     const response = await this.db.read({
       table: this.tableName,
       query: queryString,
+      order: query.order,
+      orderBy: query.orderBy as string,
     })
 
     let results = (response.records || []) as T[]
@@ -73,12 +115,10 @@ export class DbClient<T> {
     })
   }
 
-  async update(query: Query<T>) {
+  async update(query: RecordQuery<T>) {
     if (!query.where) {
       throw new Error('Please provide a query with update')
     }
-
-    console.log(query.data)
 
     if (!query.data) {
       throw new Error('Please provide data with your update query')

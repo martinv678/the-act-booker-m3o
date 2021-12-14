@@ -10,11 +10,11 @@ interface NavigationLink {
 const LINKS: NavigationLink[] = [
   {
     name: 'Details',
-    pathname: '/user/performers/[id]/details',
+    pathname: '/supplier/performers/[id]/details',
   },
   {
     name: 'Media',
-    pathname: '/user/performers/[id]/media',
+    pathname: '/supplier/performers/[id]/media',
   },
 ]
 

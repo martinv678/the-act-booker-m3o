@@ -8,7 +8,7 @@ export function useSavePerformerDetails() {
   const [isSaving, setIsSaving] = useState(false)
 
   const save = useCallback(
-    async (values: Performer) => {
+    async (values: Partial<Performer>) => {
       setIsSaving(true)
 
       try {
